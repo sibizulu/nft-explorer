@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { getUrl, getData, formatIpfs } from '../../../../utils'
+import Image from 'next/image'
 
 const NFT = props => {
   const router = useRouter()
@@ -32,17 +33,29 @@ const NFT = props => {
           Loading...
         </h2>
         <p className="w-1/3 text-center text-white">
-          This may take a few seconds, please don't close this page.
+          This may take a few seconds.
         </p>
       </div>
     )
+  }
+
+  const myLoader = ({ src, width, quality }) => {
+    return `${src}?w=${width}&q=${quality || 75}`
   }
 
   return (
     <div className="container m-auto my-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
         <div className="nft-image">
-          {nft?.image && <img src={formatIpfs(nft.image)} width={'100%'} />}
+          {nft?.image && (
+            <Image
+              loader={myLoader}
+              src={formatIpfs(nft.image)}
+              alt={nft?.name}
+              width={500}
+              height={500}
+            />
+          )}
         </div>
         <div className="nft-details col-span-2">
           {Object.keys(nft).map(item => (
