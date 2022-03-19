@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { getUrl, getData, formatIpfs } from '../../../../utils'
 import Image from 'next/image'
+import { NextSeo } from 'next-seo'
 
 const NFT = props => {
   const router = useRouter()
@@ -44,29 +45,32 @@ const NFT = props => {
   }
 
   return (
-    <div className="container m-auto my-10">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
-        <div className="nft-image">
-          {nft?.image && (
-            <Image
-              loader={myLoader}
-              src={formatIpfs(nft.image)}
-              alt={nft?.name}
-              width={500}
-              height={500}
-            />
-          )}
+    <>
+      <NextSeo title={nft?.name || 'Nft'} />
+      <main className="container m-auto my-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
+          <div className="nft-image">
+            {nft?.image && (
+              <Image
+                loader={myLoader}
+                src={formatIpfs(nft.image)}
+                alt={nft?.name}
+                width={500}
+                height={500}
+              />
+            )}
+          </div>
+          <div className="nft-details col-span-2">
+            {Object.keys(nft).map(item => (
+              <div className="mb-5" key={item}>
+                <div className="text-lg capitalize font-semibold">{item}</div>
+                <div className="text-sm">{nft[item]}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="nft-details col-span-2">
-          {Object.keys(nft).map(item => (
-            <div className="mb-5" key={item}>
-              <div className="text-lg capitalize font-semibold">{item}</div>
-              <div className="text-sm">{nft[item]}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      </main>
+    </>
   )
 }
 
