@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-
+import axios from 'axios'
 const abi = [
   {
     inputs: [
@@ -47,6 +47,12 @@ const networks = {
   },
   matic: { name: 'Matic', rpc: 'https://polygon-rpc.com/' }
 }
+
+export const formatIpfs = url =>
+  url.startsWith('ipfs://')
+    ? url.replace('ipfs:/', 'https://ipfs.io/ipfs')
+    : url
+
 export const getUrl = async (address, tokenId, network) => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(networks[network].rpc)
@@ -59,8 +65,8 @@ export const getUrl = async (address, tokenId, network) => {
 
 export const getData = url =>
   new Promise((resolve, reject) =>
-    fetch(url)
-      .then(response => response.json())
-      .then(data => resolve(data))
+    axios
+      .get(formatIpfs(url))
+      .then(response => resolve(response))
       .catch(err => reject(err))
   )

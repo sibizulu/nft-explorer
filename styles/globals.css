@@ -3,4 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
+  .nft-image {
+    @apply border;
+  }
 }

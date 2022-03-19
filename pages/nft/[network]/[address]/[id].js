@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getUrl, getData } from '../../../../utils'
+import { getUrl, getData, formatIpfs } from '../../../../utils'
 
 const NFT = props => {
   const router = useRouter()
   const { network, address, id } = router.query
   const [nft, setNft] = useState(null)
-  const [nftImage, setNftImage] = useState(null)
+  const [nftAttributes, setNftAttributes] = useState(null)
 
   useEffect(() => {
     if (address && id && network) {
@@ -14,8 +14,9 @@ const NFT = props => {
         .then(res =>
           getData(res)
             .then(result => {
-              setNftImage(result.image)
-              delete result.image
+              result = result.data
+              setNftAttributes(result.attributes)
+              delete result.attributes
               setNft(result)
             })
             .catch(err => console.log(err))
@@ -41,11 +42,11 @@ const NFT = props => {
     <div className="container m-auto my-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
         <div className="nft-image">
-          {nftImage !== null && <img src={nftImage} width={'100%'} />}
+          {nft?.image && <img src={formatIpfs(nft.image)} width={'100%'} />}
         </div>
         <div className="nft-details col-span-2">
           {Object.keys(nft).map(item => (
-            <div className="mb-5">
+            <div className="mb-5" key={item}>
               <div className="text-lg capitalize font-semibold">{item}</div>
               <div className="text-sm">{nft[item]}</div>
             </div>
